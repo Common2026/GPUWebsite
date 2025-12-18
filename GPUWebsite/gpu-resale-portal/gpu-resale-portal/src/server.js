@@ -1,40 +1,43 @@
-// gpu-resale-portal/gpu-resale-portal/src/server.js
+import express from 'express';
+import cors from 'cors';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
 
-const express = require('express');
-const bodyParser = require('body-parser');
+dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
+const PORT = process.env.PORT || 8080;
 
-// Health check route
-app.get('/', (req, res) => {
-  res.json({ status: 'API running' });
+app.use(cors());
+app.use(express.json());
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+app.get('/debug/key', (req, res) => {
+  res.send(process.env.STRIPE_SECRET_KEY || 'No key loaded');
 });
 
-// Stripe route (stubbed for now)
 app.post('/api/pay/stripe', async (req, res) => {
-  res.json({ status: 'Stripe route working', clientSecret: 'test_secret_123' });
+  try {
+    const { gpuType, hours, email } = req.body;
+    const pricePerHour = gpuType === 'A100' ? 500 : 200;
+    const amount = pricePerHour * hours;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'usd',
+      receipt_email: email,
+      description: `GPU rental: ${gpuType} for ${hours} hours`,
+      automatic_payment_methods: { enabled: true },
+    });
+
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    console.error('Stripe error:', error.message);
+    res.status(400).json({ error: error.message });
+  }
 });
 
-// PayPal route (stubbed for now)
-app.post('/paypal/create-order', async (req, res) => {
-  const order = {
-    id: 'TEST_ORDER_123',
-    status: 'CREATED',
-    amount: '49.99',
-    currency: 'USD'
-  };
-  res.json(order);
-});
-
-// Webhook route
-app.post('/webhook', (req, res) => {
-  console.log('Webhook router mounted');
-  res.sendStatus(200);
-});
-
-// Start server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Portal running on http://localhost:${PORT}`);
 });
