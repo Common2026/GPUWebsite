@@ -2,36 +2,22 @@
 import express from 'express';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
 
-// Health check route
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
+// Health check
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
-// Root route
-app.get('/', (req, res) => {
-  res.send('GPU Resale Portal is running');
+// Root route (optional)
+app.get('/', (_req, res) => {
+  res.status(200).json({ message: 'AI Processing Solutions API' });
 });
 
-// Example API route
-app.get('/api/status', (req, res) => {
-  res.json({
-    service: 'GPU Resale Portal',
-    status: 'online',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Catch-all for undefined routes
-app.use((req, res) => {
-  res.status(404).send('Not Found');
-});
-
-// Start server
+// Start server — MUST use Render’s assigned port
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
