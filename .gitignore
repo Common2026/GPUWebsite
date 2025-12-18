@@ -1,0 +1,15 @@
+node_modules
+dist
+.env
+.DS_Store
+orders.db
+db.js
+packages/
+node/
+n/
+gpuwebsite.zip
+GPUWebsite/gpu-resale-portal/gpu-resale-portal/gpu-resale-portal@1.0.0
+*.bak
+*.log
+*.tmp
+
