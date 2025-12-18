@@ -1,7 +1,11 @@
+// src/index.js
 import express from 'express';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
 
 // Health check route
 app.get('/health', (req, res) => {
@@ -13,6 +17,21 @@ app.get('/', (req, res) => {
   res.send('GPU Resale Portal is running');
 });
 
+// Example API route
+app.get('/api/status', (req, res) => {
+  res.json({
+    service: 'GPU Resale Portal',
+    status: 'online',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Catch-all for undefined routes
+app.use((req, res) => {
+  res.status(404).send('Not Found');
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
