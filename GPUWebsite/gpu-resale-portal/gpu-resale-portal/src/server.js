@@ -1,5 +1,3 @@
-// gpu-resale-portal/gpu-resale-portal/src/server.js
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -13,30 +11,18 @@ app.get('/', (req, res) => {
 
 // Stripe route
 app.post('/api/pay/stripe', async (req, res) => {
-  try {
-    // Stub response for now
-    res.json({ status: 'Stripe route working', clientSecret: 'test_secret_123' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Stripe payment failed' });
-  }
+  res.json({ status: 'Stripe route working', clientSecret: 'test_secret_123' });
 });
 
 // PayPal route
 app.post('/paypal/create-order', async (req, res) => {
-  try {
-    // Stub response for now
-    const order = {
-      id: 'TEST_ORDER_123',
-      status: 'CREATED',
-      amount: '49.99',
-      currency: 'USD'
-    };
-    res.json(order);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'PayPal order failed' });
-  }
+  const order = {
+    id: 'TEST_ORDER_123',
+    status: 'CREATED',
+    amount: '49.99',
+    currency: 'USD'
+  };
+  res.json(order);
 });
 
 // Webhook route
@@ -45,7 +31,6 @@ app.post('/webhook', (req, res) => {
   res.sendStatus(200);
 });
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Portal running on http://localhost:${PORT}`);
