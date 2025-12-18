@@ -2,41 +2,35 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // set in Render env vars
-const fetch = require('node-fetch');
 
 const app = express();
 app.use(bodyParser.json());
 
 // Health check
 app.get('/', (req, res) => {
-  res.send({ status: 'API running' });
+  res.json({ status: 'API running' });
 });
 
-// Stripe payment route
+// Stripe route
 app.post('/api/pay/stripe', async (req, res) => {
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: 5000, // cents
-      currency: 'usd',
-      automatic_payment_methods: { enabled: true },
-    });
-    res.json({ clientSecret: paymentIntent.client_secret });
+    // Stub response for now
+    res.json({ status: 'Stripe route working', clientSecret: 'test_secret_123' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Stripe payment failed' });
   }
 });
 
-// PayPal order creation route
+// PayPal route
 app.post('/paypal/create-order', async (req, res) => {
   try {
-    // Normally you’d call PayPal’s API here with your client ID/secret
+    // Stub response for now
     const order = {
       id: 'TEST_ORDER_123',
       status: 'CREATED',
       amount: '49.99',
-      currency: 'USD',
+      currency: 'USD'
     };
     res.json(order);
   } catch (err) {
