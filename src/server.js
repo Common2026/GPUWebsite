@@ -1,4 +1,4 @@
-kimport express from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 import Stripe from 'stripe';
 import cors from 'cors';
