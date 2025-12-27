@@ -1,20 +1,16 @@
 {
-  "name": "ai-processing-solutions",
+  "name": "gpu-resale-portal",
   "version": "1.0.0",
-  "description": "GPU resale portal API",
-  "main": "index.js",
-  "license": "MIT",
+  "type": "module",
+  "main": "src/server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "ts-node services/api/src/index.ts"
+    "start": "node src/server.js"
   },
   "dependencies": {
-    "axios": "^1.13.2",
+    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "stripe": "^12.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.0"
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
   }
 }
+
