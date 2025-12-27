@@ -1,49 +1,44 @@
-// src/server.js
-
-import express from 'express';
+kimport express from 'express';
 import dotenv from 'dotenv';
 import Stripe from 'stripe';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
-// Initialize Stripe with the secret key from .env
+// Stripe initialization
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Health check route
+// Health check
 app.get('/', (req, res) => {
-  res.send('GPU Resale Portal is running');
+  res.send('Backend is running');
 });
 
-// Stripe payment intent route
-app.post('/api/pay/stripe', async (req, res) => {
+// Create payment intent
+app.post('/create-payment-intent', async (req, res) => {
   try {
-    const { gpuType, hours, email } = req.body;
-
-    // Example pricing logic (adjust as needed)
-    const pricePerHour = gpuType === 'A100' ? 500 : 200;
-    const amount = pricePerHour * hours;
+    const { amount } = req.body;
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: 'usd',
-      receipt_email: email,
-      description: `GPU rental: ${gpuType} for ${hours} hours`,
-      automatic_payment_methods: { enabled: true },
+      currency: 'usd'
     });
 
-    res.json({ clientSecret: paymentIntent.client_secret });
+    res.json({
+      clientSecret: paymentIntent.client_secret
+    });
   } catch (error) {
-    console.error('Stripe error:', error.message);
-    res.status(400).json({ error: error.message });
+    console.error('Stripe error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
 // Start server
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Portal running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
